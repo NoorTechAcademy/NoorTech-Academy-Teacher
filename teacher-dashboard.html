@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Dashboard - NoorTech Academy</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+      scroll-behavior:smooth;
+    }
+
+    body{
+      min-height:100vh;
+      background:url("bg2.jpg") no-repeat center center/cover;
+      position:relative;
+      overflow-x:hidden;
+      color:#1f2937;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,50,30,0.55));
+      z-index:-2;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,215,120,0.14), transparent 22%),
+        radial-gradient(circle at 85% 30%, rgba(255,215,120,0.08), transparent 18%);
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    button, input, select, textarea{
+      font:inherit;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .page{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:270px 1fr;
+    }
+
+    .sidebar{
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(12px);
+      border-right:1px solid rgba(255,255,255,0.18);
+      padding:26px 18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      height:100vh;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:30px;
+    }
+
+    .brand-icon{
+      width:48px;
+      height:48px;
+      border-radius:14px;
+      background:#047857;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      font-weight:bold;
+      box-shadow:0 8px 20px rgba(0,0,0,0.18);
+    }
+
+    .brand-text h1{
+      color:white;
+      font-size:22px;
+      line-height:1.1;
+    }
+
+    .brand-text p{
+      color:#d1fae5;
+      font-size:12px;
+      margin-top:4px;
+    }
+
+    .menu{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .menu a{
+      color:white;
+      font-weight:600;
+      padding:14px 16px;
+      border-radius:14px;
+      transition:0.3s;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .menu a:hover,
+    .menu a.active{
+      background:rgba(255,255,255,0.16);
+      color:#facc15;
+      transform:translateX(4px);
+    }
+
+    .menu-icon{
+      width:22px;
+      text-align:center;
+      font-size:17px;
+    }
+
+    .sidebar-footer{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .mini-note{
+      color:#e5e7eb;
+      font-size:13px;
+      line-height:1.7;
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .logout-btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      font-weight:bold;
+      font-size:15px;
+      cursor:pointer;
+      background:linear-gradient(135deg, #dc2626, #b91c1c);
+      color:white;
+      box-shadow:0 8px 20px rgba(220,38,38,0.3);
+      transition:0.3s;
+    }
+
+    .logout-btn:hover{
+      transform:translateY(-2px) scale(1.02);
+      background:linear-gradient(135deg, #b91c1c, #7f1d1d);
+      box-shadow:0 12px 25px rgba(220,38,38,0.5);
+    }
+
+    .content{
+      padding:30px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:24px;
+    }
+
+    .welcome-box{
+      background:rgba(255,255,255,0.14);
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:24px;
+      padding:24px;
+      color:white;
+      box-shadow:0 12px 30px rgba(0,0,0,0.10);
+      flex:1;
+      min-width:280px;
+    }
+
+    .welcome-box p{
+      color:#d1fae5;
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+
+    .welcome-box h2{
+      margin-top:10px;
+      font-size:34px;
+      line-height:1.2;
+    }
+
+    .welcome-box span{
+      color:#facc15;
+    }
+
+    .quick-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .quick-btn{
+      padding:12px 18px;
+      border-radius:14px;
+      font-weight:bold;
+      border:none;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .quick-btn.primary{
+      background:#047857;
+      color:white;
+    }
+
+    .quick-btn.primary:hover{
+      background:#065f46;
+    }
+
+    .quick-btn.secondary{
+      background:rgba(255,255,255,0.14);
+      color:white;
+      border:1px solid rgba(255,255,255,0.18);
+      backdrop-filter:blur(8px);
+    }
+
+    .quick-btn.secondary:hover{
+      background:rgba(255,255,255,0.22);
+    }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
+      margin-bottom:24px;
+    }
+
+    .stat-card{
+      background:rgba(255,255,255,0.92);
+      border:1px solid rgba(255,255,255,0.35);
+      border-radius:22px;
+      padding:20px;
+      box-shadow:0 10px 24px rgba(0,0,0,0.08);
+      backdrop-filter:blur(8px);
+      transition:0.3s;
+    }
+
+    .stat-card:hover{
+      transform:translateY(-4px);
+    }
+
+    .stat-card h3{
+      color:#047857;
+      font-size:30px;
+      margin-bottom:8px;
+    }
+
+    .stat-card p{
+      color:#6b7280;
+      font-size:14px;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.7fr 1fr;
+      gap:24px;
+    }
+
+    .left-column,
+    .right-column{
+      display:flex;
+      flex-direction:column;
+      gap:24px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.93);
+      border:1px solid rgba(255,255,255,0.35);
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 12px 30px rgba(0,0,0,0.10);
+      backdrop-filter:blur(10px);
+    }
+
+    .card-title{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .card-title h3{
+      color:#064e3b;
+      font-size:24px;
+    }
+
+    .card-title span{
+      color:#6b7280;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .toolbar{
+      display:grid;
+      grid-template-columns:1.2fr auto;
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .toolbar-box{
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:12px 14px;
+    }
+
+    .toolbar-box input,
+    .toolbar-box select{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      font-size:14px;
+      color:#1f2937;
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:860px;
+    }
+
+    th, td{
+      padding:14px 12px;
+      text-align:left;
+      border-bottom:1px solid #e5e7eb;
+      font-size:14px;
+      vertical-align:middle;
+    }
+
+    th{
+      color:#065f46;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      background:#f9fafb;
+    }
+
+    td{
+      color:#4b5563;
+    }
+
+    tr:hover td{
+      background:#fcfcfc;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:7px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:bold;
+    }
+
+    .badge-green{
+      background:#ecfdf5;
+      color:#065f46;
+      border:1px solid #a7f3d0;
+    }
+
+    .badge-gold{
+      background:#fef3c7;
+      color:#b45309;
+      border:1px solid #fde68a;
+    }
+
+    .badge-blue{
+      background:#eff6ff;
+      color:#1d4ed8;
+      border:1px solid #bfdbfe;
+    }
+
+    .badge-red{
+      background:#fee2e2;
+      color:#b91c1c;
+      border:1px solid #fecaca;
+    }
+
+    .progress-wrap{
+      min-width:130px;
+    }
+
+    .progress-top{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:6px;
+      font-size:12px;
+      color:#374151;
+      font-weight:600;
+    }
+
+    .progress-bar{
+      height:8px;
+      background:#e5e7eb;
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .progress-fill{
+      height:100%;
+      background:linear-gradient(to right, #10b981, #047857);
+      border-radius:999px;
+    }
+
+    .action-btn{
+      border:none;
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:bold;
+      margin-right:6px;
+      margin-bottom:4px;
+      transition:0.3s;
+    }
+
+    .view-btn{
+      background:#ecfdf5;
+      color:#065f46;
+      border:1px solid #a7f3d0;
+    }
+
+    .message-btn{
+      background:#eff6ff;
+      color:#1d4ed8;
+      border:1px solid #bfdbfe;
+    }
+
+    .meeting-btn{
+      background:#fef3c7;
+      color:#b45309;
+      border:1px solid #fde68a;
+    }
+
+    .reply-btn{
+      background:#f3f4f6;
+      color:#1f2937;
+      border:1px solid #d1d5db;
+    }
+
+    .action-btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .info-list{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .info-item{
+      padding:14px 16px;
+      border-radius:16px;
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+    }
+
+    .info-item strong{
+      display:block;
+      color:#065f46;
+      margin-bottom:6px;
+    }
+
+    .info-item p{
+      color:#6b7280;
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .meeting-list{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .meeting-card{
+      padding:16px;
+      border-radius:18px;
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+    }
+
+    .meeting-card h4{
+      color:#065f46;
+      margin-bottom:6px;
+      font-size:18px;
+    }
+
+    .meeting-card p{
+      color:#4b5563;
+      font-size:14px;
+      line-height:1.7;
+      margin-bottom:10px;
+    }
+
+    .announce-form{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .announce-form input,
+    .announce-form textarea,
+    .message-form input,
+    .message-form textarea{
+      width:100%;
+      padding:14px 16px;
+      border:1px solid #a7f3d0;
+      border-radius:14px;
+      font-size:15px;
+      outline:none;
+      background:#fff;
+    }
+
+    .announce-form textarea,
+    .message-form textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+
+    .announce-form input:focus,
+    .announce-form textarea:focus,
+    .message-form input:focus,
+    .message-form textarea:focus{
+      border-color:#10b981;
+      box-shadow:0 0 0 3px rgba(16,185,129,0.15);
+    }
+
+    .announcements-list,
+    .inbox-list,
+    .history-list{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .announcement-item,
+    .inbox-item,
+    .history-item{
+      padding:14px 16px;
+      border-radius:16px;
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+    }
+
+    .announcement-item h4,
+    .inbox-item h4,
+    .history-item h4{
+      color:#065f46;
+      margin-bottom:6px;
+      font-size:17px;
+    }
+
+    .announcement-item p,
+    .inbox-item p,
+    .history-item p{
+      color:#4b5563;
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    .announcement-item small,
+    .inbox-item small,
+    .history-item small{
+      display:block;
+      margin-top:8px;
+      color:#6b7280;
+      font-size:12px;
+    }
+
+    .inbox-actions,
+    .history-actions{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .popup{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.65);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:0;
+      pointer-events:none;
+      transition:0.35s;
+      z-index:5000;
+      padding:20px;
+    }
+
+    .popup.active{
+      opacity:1;
+      pointer-events:all;
+    }
+
+    .popup-content{
+      width:100%;
+      max-width:680px;
+      background:white;
+      border-radius:24px;
+      padding:28px 24px;
+      box-shadow:0 20px 40px rgba(0,0,0,0.18);
+      max-height:90vh;
+      overflow:auto;
+    }
+
+    .popup-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .popup-head h3{
+      color:#047857;
+      font-size:26px;
+    }
+
+    .close-btn{
+      border:none;
+      background:#f3f4f6;
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    .profile-box{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+    }
+
+    .profile-item{
+      padding:14px;
+      border-radius:16px;
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+    }
+
+    .profile-item strong{
+      display:block;
+      color:#065f46;
+      margin-bottom:6px;
+      font-size:13px;
+      text-transform:uppercase;
+    }
+
+    .profile-item p{
+      color:#4b5563;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .toast{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:#047857;
+      color:white;
+      padding:14px 18px;
+      border-radius:14px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.18);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      opacity:0;
+      transform:translateY(20px);
+      pointer-events:none;
+      transition:0.35s;
+      z-index:6000;
+      min-width:260px;
+      max-width:360px;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(30px);
+      transition:opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.active{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media (max-width: 1200px){
+      .stats-grid{
+        grid-template-columns:repeat(2, 1fr);
+      }
+
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .toolbar{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 900px){
+      .page{
+        grid-template-columns:1fr;
+      }
+
+      .sidebar{
+        position:relative;
+        height:auto;
+      }
+    }
+
+    @media (max-width: 650px){
+      .content{
+        padding:18px;
+      }
+
+      .stats-grid{
+        grid-template-columns:1fr;
+      }
+
+      .topbar{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .profile-box{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <aside class="sidebar">
+      <div>
+        <div class="brand">
+          <div class="brand-icon">T</div>
+          <div class="brand-text">
+            <h1>NoorTech Teacher</h1>
+            <p>Teacher Management Space</p>
+          </div>
+        </div>
+
+        <div class="menu">
+          <a href="#" class="active" data-section="dashboardSection"><span class="menu-icon">📊</span> Dashboard</a>
+          <a href="#" data-section="studentsSection"><span class="menu-icon">👨‍🎓</span> Students</a>
+          <a href="#" data-section="meetingsSection"><span class="menu-icon">📅</span> Meetings</a>
+          <a href="#" data-section="announcementsSection"><span class="menu-icon">📢</span> Announcements</a>
+          <a href="#" data-section="inboxSection"><span class="menu-icon">📩</span> Inbox</a>
+          <a href="#" data-section="historySection"><span class="menu-icon">🕘</span> History</a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="mini-note">
+          Follow students, create meetings, publish announcements, and manage communication.
+        </div>
+        <button class="logout-btn" onclick="window.location.href='teacher-login.html'">Logout</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar reveal">
+        <div class="welcome-box">
+          <p>Teacher Panel</p>
+          <h2>Welcome, <span>Ustadha Maryam</span> </h2>
+        </div>
+
+        <div class="quick-actions">
+          <button class="quick-btn primary" id="quickMeetingBtn">Start Meeting</button>
+          <button class="quick-btn secondary" id="quickAnnouncementBtn">New Announcement</button>
+        </div>
+      </div>
+
+      <div class="stats-grid reveal">
+        <div class="stat-card">
+          <h3 id="studentsCount">0</h3>
+          <p>Total Students</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="activeStudentsCount">0</h3>
+          <p>Active Students</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="meetingCount">0</h3>
+          <p>Weekly Meetings</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="announcementCount">0</h3>
+          <p>Announcements</p>
+        </div>
+      </div>
+
+      <div class="layout">
+        <div class="left-column">
+          <div class="card reveal" id="dashboardSection">
+            <div class="card-title">
+              <h3>Students Progress</h3>
+              <span>Follow what students are doing</span>
+            </div>
+
+            <div class="toolbar">
+              <div class="toolbar-box">
+                <input type="text" id="studentSearch" placeholder="Search by name, email or country...">
+              </div>
+              <div class="toolbar-box">
+                <select id="levelFilter">
+                  <option value="all">All Levels</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-wrap" id="studentsSection">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>Email</th>
+                    <th>Country</th>
+                    <th>Level</th>
+                    <th>Course</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card reveal" id="announcementsSection">
+            <div class="card-title">
+              <h3>Teacher Announcements</h3>
+              <span>Send updates to students</span>
+            </div>
+
+            <form class="announce-form" id="announcementForm">
+              <input type="text" id="announcementTitle" placeholder="Announcement title">
+              <textarea id="announcementMessage" placeholder="Write your announcement here..."></textarea>
+              <button type="submit" class="quick-btn primary" style="width:fit-content;">Publish Announcement</button>
+            </form>
+
+            <div class="announcements-list" id="announcementsList"></div>
+          </div>
+
+          <div class="card reveal" id="historySection">
+            <div class="card-title">
+              <h3>Messages History</h3>
+              <span>Sent and replied messages</span>
+            </div>
+            <div class="history-list" id="historyList"></div>
+          </div>
+        </div>
+
+        <div class="right-column">
+          <div class="card reveal" id="meetingsSection">
+            <div class="card-title">
+              <h3>Meeting Schedule</h3>
+              <span>Upcoming sessions</span>
+            </div>
+
+            <div class="meeting-list" id="meetingsList"></div>
+          </div>
+
+          <div class="card reveal">
+            <div class="card-title">
+              <h3>Class Notes</h3>
+              <span>Teaching reminders</span>
+            </div>
+
+            <div class="info-list">
+              <div class="info-item">
+                <strong>Tajwid Class</strong>
+                <p>Focus on makharij and pronunciation during the next session.</p>
+              </div>
+              <div class="info-item">
+                <strong>Memorization Group</strong>
+                <p>Revise Surah Al-Mulk with students before the weekly test.</p>
+              </div>
+              <div class="info-item">
+                <strong>Children Level</strong>
+                <p>Use short exercises and audio repetition for beginner kids.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <div class="card-title">
+              <h3>Recent Student Activity</h3>
+              <span>Latest progress</span>
+            </div>
+
+            <div class="info-list" id="recentActivityList"></div>
+          </div>
+
+          <div class="card reveal" id="inboxSection">
+            <div class="card-title">
+              <h3>Inbox</h3>
+              <span>Student messages</span>
+            </div>
+
+            <div class="inbox-list" id="inboxList"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- STUDENT DETAILS -->
+  <div class="popup" id="studentPopup">
+    <div class="popup-content">
+      <div class="popup-head">
+        <h3>Student Details</h3>
+        <button class="close-btn" onclick="closePopup('studentPopup')">✕</button>
+      </div>
+      <div class="profile-box" id="studentDetails"></div>
+    </div>
+  </div>
+
+  <!-- SEND MESSAGE -->
+  <div class="popup" id="messagePopup">
+    <div class="popup-content">
+      <div class="popup-head">
+        <h3>Send Message</h3>
+        <button class="close-btn" onclick="closePopup('messagePopup')">✕</button>
+      </div>
+
+      <form class="message-form" id="messageForm">
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <input type="text" id="messageStudentName" readonly placeholder="Student">
+          <input type="text" id="messageSubject" placeholder="Subject">
+          <textarea id="messageContent" placeholder="Write your message here..."></textarea>
+          <button type="submit" class="quick-btn primary" style="width:fit-content;">Send Message</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- REPLY MESSAGE -->
+  <div class="popup" id="replyPopup">
+    <div class="popup-content">
+      <div class="popup-head">
+        <h3>Reply Message</h3>
+        <button class="close-btn" onclick="closePopup('replyPopup')">✕</button>
+      </div>
+
+      <form class="message-form" id="replyForm">
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <input type="text" id="replyStudentName" readonly placeholder="Student">
+          <input type="text" id="replySubject" readonly placeholder="Subject">
+          <textarea id="replyContent" placeholder="Write your reply here..."></textarea>
+          <button type="submit" class="quick-btn primary" style="width:fit-content;">Send Reply</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <div>✅</div>
+    <div id="toastText">Action completed successfully.</div>
+  </div>
+
+  <script>
+    const students = [
+      {
+        id: 1,
+        name: "Mohamed Koubaa",
+        email: "mohamed@example.com",
+        country: "France",
+        level: "Intermediate",
+        course: "Tajwid Essentials",
+        progress: 78,
+        status: "Active"
+      },
+      {
+        id: 2,
+        name: "Safae Zerhouni",
+        email: "safae@example.com",
+        country: "Belgium",
+        level: "Beginner",
+        course: "Quran Reading Basics",
+        progress: 52,
+        status: "Active"
+      },
+      {
+        id: 3,
+        name: "Youssef Amrani",
+        email: "youssef@example.com",
+        country: "Spain",
+        level: "Beginner",
+        course: "Quran Reading Basics",
+        progress: 34,
+        status: "Pending"
+      },
+      {
+        id: 4,
+        name: "Maryam Naciri",
+        email: "maryam@example.com",
+        country: "Germany",
+        level: "Advanced",
+        course: "Memorization Support",
+        progress: 88,
+        status: "Active"
+      },
+      {
+        id: 5,
+        name: "Adam Benali",
+        email: "adam@example.com",
+        country: "Netherlands",
+        level: "Intermediate",
+        course: "Tajwid Essentials",
+        progress: 63,
+        status: "Active"
+      }
+    ];
+
+    const meetings = [
+      {
+        title: "Tajwid Session",
+        teacher: "Ustadha Maryam",
+        day: "Wednesday",
+        time: "19:00"
+      },
+      {
+        title: "Reading Practice",
+        teacher: "Ustadha Maryam",
+        day: "Friday",
+        time: "18:00"
+      },
+      {
+        title: "Revision Meeting",
+        teacher: "Ustadha Maryam",
+        day: "Sunday",
+        time: "17:30"
+      }
+    ];
+
+    const announcements = [
+      {
+        title: "Welcome to this week",
+        message: "Please revise the previous lessons before the next live session.",
+        date: "Today"
+      },
+      {
+        title: "Homework Reminder",
+        message: "All students should complete the pronunciation exercise before Friday.",
+        date: "Yesterday"
+      }
+    ];
+
+    const inboxMessages = [
+      {
+        id: 1,
+        studentName: "Mohamed Koubaa",
+        subject: "Question about Tajwid",
+        message: "Can you explain the lesson again before Wednesday?",
+        date: "Today"
+      },
+      {
+        id: 2,
+        studentName: "Safae Zerhouni",
+        subject: "Homework completed",
+        message: "I finished the exercise and I want feedback.",
+        date: "Yesterday"
+      }
+    ];
+
+    const messageHistory = [
+      {
+        id: 1,
+        studentName: "Maryam Naciri",
+        subject: "Meeting Reminder",
+        message: "Please join the session on time tomorrow.",
+        date: "2 hours ago"
+      }
+    ];
+
+    const studentsTableBody = document.getElementById("studentsTableBody");
+    const studentSearch = document.getElementById("studentSearch");
+    const levelFilter = document.getElementById("levelFilter");
+    const studentDetails = document.getElementById("studentDetails");
+    const meetingsList = document.getElementById("meetingsList");
+    const announcementsList = document.getElementById("announcementsList");
+    const recentActivityList = document.getElementById("recentActivityList");
+    const inboxList = document.getElementById("inboxList");
+    const historyList = document.getElementById("historyList");
+
+    const studentsCount = document.getElementById("studentsCount");
+    const activeStudentsCount = document.getElementById("activeStudentsCount");
+    const meetingCount = document.getElementById("meetingCount");
+    const announcementCount = document.getElementById("announcementCount");
+
+    const toast = document.getElementById("toast");
+    const toastText = document.getElementById("toastText");
+
+    let selectedStudentForMessage = null;
+    let selectedInboxMessage = null;
+
+    function showToast(message) {
+      toastText.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2600);
+    }
+
+    function closePopup(id) {
+      document.getElementById(id).classList.remove("active");
+    }
+
+    function openPopup(id) {
+      document.getElementById(id).classList.add("active");
+    }
+
+    function getStatusBadge(status) {
+      if (status === "Active") return "badge badge-green";
+      if (status === "Pending") return "badge badge-gold";
+      return "badge badge-red";
+    }
+
+    function getLevelBadge(level) {
+      if (level === "Beginner") return "badge badge-green";
+      if (level === "Intermediate") return "badge badge-gold";
+      return "badge badge-blue";
+    }
+
+    function renderStudents() {
+      const searchValue = studentSearch.value.toLowerCase().trim();
+      const selectedLevel = levelFilter.value;
+
+      studentsTableBody.innerHTML = "";
+
+      students.forEach(student => {
+        const matchesSearch =
+          student.name.toLowerCase().includes(searchValue) ||
+          student.email.toLowerCase().includes(searchValue) ||
+          student.country.toLowerCase().includes(searchValue);
+
+        const matchesLevel = selectedLevel === "all" || student.level === selectedLevel;
+
+        if (matchesSearch && matchesLevel) {
+          studentsTableBody.innerHTML += `
+            <tr>
+              <td>${student.name}</td>
+              <td>${student.email}</td>
+              <td>${student.country}</td>
+              <td><span class="${getLevelBadge(student.level)}">${student.level}</span></td>
+              <td>${student.course}</td>
+              <td>
+                <div class="progress-wrap">
+                  <div class="progress-top">
+                    <span>Progress</span>
+                    <span>${student.progress}%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width:${student.progress}%"></div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="${getStatusBadge(student.status)}">${student.status}</span></td>
+              <td>
+                <button class="action-btn view-btn" onclick="viewStudent(${student.id})">View</button>
+                <button class="action-btn message-btn" onclick="openMessagePopup(${student.id})">Message</button>
+              </td>
+            </tr>
+          `;
+        }
+      });
+    }
+
+    function renderMeetings() {
+      meetingsList.innerHTML = "";
+      meetings.forEach((meeting) => {
+        meetingsList.innerHTML += `
+          <div class="meeting-card">
+            <h4>${meeting.title}</h4>
+            <p>${meeting.teacher} • ${meeting.day} • ${meeting.time}</p>
+            <button class="action-btn meeting-btn" onclick="startMeeting('${meeting.title}')">Start Meeting</button>
+          </div>
+        `;
+      });
+    }
+
+    function renderAnnouncements() {
+      announcementsList.innerHTML = "";
+      announcements.forEach(item => {
+        announcementsList.innerHTML += `
+          <div class="announcement-item">
+            <h4>${item.title}</h4>
+            <p>${item.message}</p>
+            <small>${item.date}</small>
+          </div>
+        `;
+      });
+    }
+
+    function renderRecentActivity() {
+      recentActivityList.innerHTML = "";
+      const latest = [...students].slice(0, 4);
+
+      latest.forEach(student => {
+        recentActivityList.innerHTML += `
+          <div class="info-item">
+            <strong>${student.name}</strong>
+            <p>${student.progress}% completed in ${student.course}.</p>
+          </div>
+        `;
+      });
+    }
+
+    function renderInbox() {
+      inboxList.innerHTML = "";
+      inboxMessages.forEach(msg => {
+        inboxList.innerHTML += `
+          <div class="inbox-item">
+            <h4>${msg.studentName}</h4>
+            <p><strong>${msg.subject}</strong></p>
+            <p>${msg.message}</p>
+            <small>${msg.date}</small>
+            <div class="inbox-actions">
+              <button class="action-btn reply-btn" onclick="openReplyPopup(${msg.id})">Reply</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = "";
+      messageHistory.forEach(msg => {
+        historyList.innerHTML += `
+          <div class="history-item">
+            <h4>${msg.studentName}</h4>
+            <p><strong>${msg.subject}</strong></p>
+            <p>${msg.message}</p>
+            <small>${msg.date}</small>
+            <div class="history-actions">
+              <button class="action-btn reply-btn" onclick="replyFromHistory('${msg.studentName}', '${msg.subject}')">Reply</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderStats() {
+      studentsCount.textContent = students.length;
+      activeStudentsCount.textContent = students.filter(s => s.status === "Active").length;
+      meetingCount.textContent = meetings.length;
+      announcementCount.textContent = announcements.length;
+    }
+
+    function viewStudent(id) {
+      const student = students.find(s => s.id === id);
+      if (!student) return;
+
+      studentDetails.innerHTML = `
+        <div class="profile-item">
+          <strong>Full Name</strong>
+          <p>${student.name}</p>
+        </div>
+        <div class="profile-item">
+          <strong>Email</strong>
+          <p>${student.email}</p>
+        </div>
+        <div class="profile-item">
+          <strong>Country</strong>
+          <p>${student.country}</p>
+        </div>
+        <div class="profile-item">
+          <strong>Level</strong>
+          <p>${student.level}</p>
+        </div>
+        <div class="profile-item">
+          <strong>Course</strong>
+          <p>${student.course}</p>
+        </div>
+        <div class="profile-item">
+          <strong>Progress</strong>
+          <p>${student.progress}%</p>
+        </div>
+        <div class="profile-item">
+          <strong>Status</strong>
+          <p>${student.status}</p>
+        </div>
+        <div class="profile-item">
+          <strong>Teacher</strong>
+          <p>Ustadha Maryam</p>
+        </div>
+      `;
+      openPopup("studentPopup");
+    }
+
+    function openMessagePopup(id) {
+      const student = students.find(s => s.id === id);
+      if (!student) return;
+
+      selectedStudentForMessage = student;
+      document.getElementById("messageStudentName").value = student.name;
+      document.getElementById("messageSubject").value = "";
+      document.getElementById("messageContent").value = "";
+
+      openPopup("messagePopup");
+    }
+
+    function openReplyPopup(id) {
+      const msg = inboxMessages.find(m => m.id === id);
+      if (!msg) return;
+
+      selectedInboxMessage = msg;
+      document.getElementById("replyStudentName").value = msg.studentName;
+      document.getElementById("replySubject").value = "Re: " + msg.subject;
+      document.getElementById("replyContent").value = "";
+
+      openPopup("replyPopup");
+    }
+
+    function replyFromHistory(studentName, subject) {
+      document.getElementById("replyStudentName").value = studentName;
+      document.getElementById("replySubject").value = "Re: " + subject;
+      document.getElementById("replyContent").value = "";
+      openPopup("replyPopup");
+    }
+
+    function startMeeting(meetingTitle) {
+      showToast("Meeting started: " + meetingTitle + ".");
+    }
+
+    document.getElementById("quickMeetingBtn").addEventListener("click", () => {
+      showToast("Quick meeting started.");
+    });
+
+    document.getElementById("quickAnnouncementBtn").addEventListener("click", () => {
+      document.getElementById("announcementsSection").scrollIntoView({ behavior: "smooth" });
+    });
+
+    document.getElementById("announcementForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById("announcementTitle").value.trim();
+      const message = document.getElementById("announcementMessage").value.trim();
+
+      if (!title || !message) {
+        showToast("Please fill in the announcement title and message.");
+        return;
+      }
+
+      announcements.unshift({
+        title,
+        message,
+        date: "Just now"
+      });
+
+      this.reset();
+      renderAnnouncements();
+      renderStats();
+      showToast("Announcement published successfully.");
+    });
+
+    document.getElementById("messageForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const subject = document.getElementById("messageSubject").value.trim();
+      const content = document.getElementById("messageContent").value.trim();
+
+      if (!subject || !content) {
+        showToast("Please fill in the subject and message.");
+        return;
+      }
+
+      messageHistory.unshift({
+        id: Date.now(),
+        studentName: selectedStudentForMessage.name,
+        subject: subject,
+        message: content,
+        date: "Just now"
+      });
+
+      closePopup("messagePopup");
+      renderHistory();
+      showToast("Message sent to " + selectedStudentForMessage.name + ".");
+    });
+
+    document.getElementById("replyForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const studentName = document.getElementById("replyStudentName").value.trim();
+      const subject = document.getElementById("replySubject").value.trim();
+      const content = document.getElementById("replyContent").value.trim();
+
+      if (!content) {
+        showToast("Please write your reply.");
+        return;
+      }
+
+      messageHistory.unshift({
+        id: Date.now(),
+        studentName: studentName,
+        subject: subject,
+        message: content,
+        date: "Just now"
+      });
+
+      closePopup("replyPopup");
+      renderHistory();
+      showToast("Reply sent to " + studentName + ".");
+    });
+
+    studentSearch.addEventListener("input", renderStudents);
+    levelFilter.addEventListener("change", renderStudents);
+
+    document.querySelectorAll(".menu a[data-section]").forEach((link) => {
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        document.querySelectorAll(".menu a").forEach((a) => a.classList.remove("active"));
+        this.classList.add("active");
+        const targetId = this.getAttribute("data-section");
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    const reveals = document.querySelectorAll(".reveal");
+    function revealOnScroll() {
+      const windowHeight = window.innerHeight;
+      reveals.forEach((el) => {
+        const top = el.getBoundingClientRect().top;
+        if (top < windowHeight - 80) {
+          el.classList.add("active");
+        }
+      });
+    }
+
+    window.addEventListener("scroll", revealOnScroll);
+    window.addEventListener("load", revealOnScroll);
+
+    renderStudents();
+    renderMeetings();
+    renderAnnouncements();
+    renderRecentActivity();
+    renderInbox();
+    renderHistory();
+    renderStats();
+  </script>
+</body>
+</html>

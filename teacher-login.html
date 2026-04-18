@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Login - NoorTech Academy</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      background:url("bg2.jpg") no-repeat center center/cover;
+      position:relative;
+      overflow-x:hidden;
+      color:#1f2937;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.38),
+        rgba(0,50,30,0.60)
+      );
+      z-index:-2;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,215,120,0.14), transparent 22%),
+        radial-gradient(circle at 85% 30%, rgba(255,215,120,0.08), transparent 18%);
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .container{
+      width:90%;
+      max-width:1200px;
+      margin:auto;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,0.18);
+    }
+
+    .navbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px 0;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .logo-icon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:#047857;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:bold;
+      font-size:20px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .logo h1{
+      font-size:20px;
+      color:white;
+    }
+
+    .logo p{
+      font-size:12px;
+      color:#d1fae5;
+    }
+
+    nav{
+      display:flex;
+      gap:24px;
+      flex-wrap:wrap;
+    }
+
+    nav a{
+      color:white;
+      font-size:14px;
+      font-weight:600;
+      transition:0.3s;
+    }
+
+    nav a:hover{
+      color:#facc15;
+    }
+
+    .teacher-login-section{
+      min-height:calc(100vh - 82px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 0;
+    }
+
+    .teacher-login-wrap{
+      width:100%;
+      max-width:1100px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:28px;
+      align-items:stretch;
+    }
+
+    .left-box{
+      background:linear-gradient(to bottom right, rgba(6,95,70,0.95), rgba(16,185,129,0.88));
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:30px;
+      padding:38px;
+      color:white;
+      box-shadow:0 16px 36px rgba(0,0,0,0.15);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .left-box::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at top right, rgba(255,255,255,0.20), transparent 35%);
+      pointer-events:none;
+    }
+
+    .left-box-content{
+      position:relative;
+      z-index:2;
+    }
+
+    .left-box .top{
+      color:#d1fae5;
+      text-transform:uppercase;
+      letter-spacing:3px;
+      font-size:13px;
+    }
+
+    .left-box h2{
+      margin-top:14px;
+      font-size:40px;
+      line-height:1.2;
+    }
+
+    .left-box p{
+      margin-top:18px;
+      color:#ecfdf5;
+      line-height:1.9;
+      font-size:15px;
+    }
+
+    .teacher-points{
+      margin-top:24px;
+      padding-left:18px;
+      line-height:2;
+      color:#f0fdf4;
+      font-size:15px;
+    }
+
+    .login-card{
+      background:rgba(255,255,255,0.94);
+      border:1px solid rgba(255,255,255,0.35);
+      border-radius:30px;
+      padding:34px;
+      box-shadow:0 14px 30px rgba(0,0,0,0.10);
+      backdrop-filter:blur(10px);
+    }
+
+    .login-card h3{
+      color:#064e3b;
+      font-size:32px;
+      margin-bottom:10px;
+    }
+
+    .login-card p{
+      color:#6b7280;
+      line-height:1.8;
+      margin-bottom:22px;
+    }
+
+    .form-group{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-bottom:16px;
+    }
+
+    .form-group label{
+      font-size:14px;
+      color:#065f46;
+      font-weight:600;
+    }
+
+    .form-group input{
+      width:100%;
+      padding:14px 16px;
+      border:1px solid #a7f3d0;
+      border-radius:14px;
+      font-size:15px;
+      outline:none;
+      background:#fff;
+      transition:0.25s;
+    }
+
+    .form-group input:focus{
+      border-color:#10b981;
+      box-shadow:0 0 0 3px rgba(16,185,129,0.15);
+    }
+
+    .password-wrap{
+      position:relative;
+      display:flex;
+      align-items:center;
+    }
+
+    .password-wrap input{
+      padding-right:52px;
+    }
+
+    .toggle-password{
+      position: absolute;
+      right: 12px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+      color: #065f46;
+    }
+
+    .btn{
+      display:inline-block;
+      width:100%;
+      padding:14px 22px;
+      border-radius:14px;
+      border:none;
+      cursor:pointer;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .btn-primary{
+      background:#047857;
+      color:white;
+    }
+
+    .btn-primary:hover{
+      background:#065f46;
+      transform:translateY(-2px);
+    }
+
+    .error-box{
+      display:none;
+      margin-bottom:16px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:#fee2e2;
+      border:1px solid #fecaca;
+      color:#b91c1c;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .hint-box{
+      margin-top:18px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      color:#065f46;
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .popup{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.65);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:0;
+      pointer-events:none;
+      transition:0.35s;
+      z-index:4000;
+      padding:20px;
+    }
+
+    .popup.active{
+      opacity:1;
+      pointer-events:all;
+    }
+
+    .popup-content{
+      width:100%;
+      max-width:420px;
+      background:white;
+      border-radius:24px;
+      padding:30px 24px;
+      text-align:center;
+      box-shadow:0 20px 40px rgba(0,0,0,0.18);
+    }
+
+    .popup-icon{
+      width:72px;
+      height:72px;
+      margin:0 auto 16px;
+      border-radius:50%;
+      background:#ecfdf5;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:34px;
+      border:2px solid #a7f3d0;
+    }
+
+    .popup-content h3{
+      color:#047857;
+      font-size:28px;
+      margin-bottom:10px;
+    }
+
+    .popup-content p{
+      color:#4b5563;
+      line-height:1.8;
+    }
+
+    @media (max-width: 900px){
+      .teacher-login-wrap{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 700px){
+      .navbar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      nav{
+        gap:12px;
+      }
+
+      .left-box h2{
+        font-size:30px;
+      }
+
+      .login-card h3{
+        font-size:26px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container navbar">
+      <div class="logo">
+        <div class="logo-icon">T</div>
+        <div>
+          <h1>NoorTech Teacher</h1>
+          <p>Independent Teacher Space</p>
+        </div>
+      </div>
+
+      <nav>
+        <a href="teacher-login.html">Teacher Home</a>
+        <a href="index.html">Client Site</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="teacher-login-section">
+    <div class="container teacher-login-wrap">
+
+      <div class="left-box">
+        <div class="left-box-content">
+          <p class="top">Teacher Access</p>
+          <h2>Secure access for NoorTech teachers</h2>
+          <p>
+            This page is reserved for teachers to manage students, meetings, announcements, and communication.
+          </p>
+
+          <ul class="teacher-points">
+            <li>Follow students progress</li>
+            <li>Start and manage meetings</li>
+            <li>Send announcements</li>
+            <li>Reply to student messages</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="login-card">
+        <h3>Teacher Login</h3>
+        <p>Enter the teacher credentials to access the teacher dashboard.</p>
+
+        <div class="error-box" id="loginError">
+          Invalid teacher email or password.
+        </div>
+
+        <form id="teacherLoginForm">
+          <div class="form-group">
+            <label for="teacherEmail">Teacher Email</label>
+            <input type="email" id="teacherEmail" placeholder="Enter teacher email">
+          </div>
+
+          <div class="form-group">
+            <label for="teacherPassword">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="teacherPassword" placeholder="Enter password">
+              <button type="button" class="toggle-password" id="togglePassword"></button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Login as Teacher</button>
+        </form>
+
+        <div class="hint-box">
+          This login is reserved only for the teacher dashboard.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="popup" id="successPopup">
+    <div class="popup-content">
+      <div class="popup-icon">✅</div>
+      <h3>Login Successful</h3>
+      <p>Redirecting to the teacher dashboard...</p>
+    </div>
+  </div>
+
+  <script>
+    const teacherLoginForm = document.getElementById("teacherLoginForm");
+    const teacherEmail = document.getElementById("teacherEmail");
+    const teacherPassword = document.getElementById("teacherPassword");
+    const loginError = document.getElementById("loginError");
+    const successPopup = document.getElementById("successPopup");
+    const togglePassword = document.getElementById("togglePassword");
+
+    const TEACHER_EMAIL = "teacher@noortechacademy.com";
+    const TEACHER_PASSWORD = "teacher123";
+
+    togglePassword.addEventListener("click", () => {
+      if (teacherPassword.type === "password") {
+        teacherPassword.type = "text";
+        togglePassword.textContent = "🙈";
+      } else {
+        teacherPassword.type = "password";
+        togglePassword.textContent = "👁️";
+      }
+    });
+
+    teacherLoginForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const emailValue = teacherEmail.value.trim();
+      const passwordValue = teacherPassword.value.trim();
+
+      if (emailValue === TEACHER_EMAIL && passwordValue === TEACHER_PASSWORD) {
+        loginError.style.display = "none";
+        successPopup.classList.add("active");
+
+        setTimeout(() => {
+          window.location.href = "teacher-dashboard.html";
+        }, 1800);
+      } else {
+        loginError.style.display = "block";
+      }
+    });
+
+    teacherEmail.addEventListener("input", () => {
+      loginError.style.display = "none";
+    });
+
+    teacherPassword.addEventListener("input", () => {
+      loginError.style.display = "none";
+    });
+  </script>
+
+</body>
+</html>
